@@ -35,3 +35,19 @@ packages/
 *.keep
 
 .idea/
+
+# .NET localization satellite assemblies (build artifacts, should not be in source)
+cs/
+de/
+es/
+fr/
+it/
+ja/
+ko/
+pl/
+pt-BR/
+ru/
+tr/
+zh-Hans/
+zh-Hant/
+*.resources.dll

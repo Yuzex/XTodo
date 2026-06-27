@@ -176,6 +176,8 @@ public partial class MainWindow : Window
     {
         if (sender is not Button btn) return;
 
+        _viewModel.RefreshWorkspacesList();
+
         var menu = new ContextMenu
         {
             FontFamily = new System.Windows.Media.FontFamily("Microsoft YaHei"),
@@ -187,6 +189,48 @@ public partial class MainWindow : Window
             BorderThickness = new Thickness(1)
         };
 
+        // ---- 工作区区域 ----
+        var workspaceHeader = new MenuItem
+        {
+            Header = "工作区",
+            IsEnabled = false,
+            Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0x8D, 0x6E, 0x63)),
+            FontWeight = FontWeights.Bold,
+            Padding = new Thickness(12, 4, 28, 2)
+        };
+        menu.Items.Add(workspaceHeader);
+
+        foreach (var ws in _viewModel.AvailableWorkspaces)
+        {
+            var isCurrent = ws == _viewModel.ActiveWorkspace;
+            var wsItem = new MenuItem
+            {
+                Header = ws,
+                IsCheckable = true,
+                IsChecked = isCurrent,
+                ToolTip = "右键打开文件夹",
+                Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x3E, 0x27, 0x23)),
+                Padding = new Thickness(28, 4, 28, 4)
+            };
+            var captured = ws;
+            wsItem.Click += (_, _) =>
+            {
+                if (captured != _viewModel.ActiveWorkspace)
+                    _viewModel.SwitchToWorkspace(captured);
+            };
+            wsItem.PreviewMouseRightButtonDown += (_, args) =>
+            {
+                OpenWorkspaceInExplorer(captured);
+                args.Handled = true;
+            };
+            menu.Items.Add(wsItem);
+        }
+
+        menu.Items.Add(new Separator());
+
+        // ---- 开机自启动 ----
         var autoStartItem = new MenuItem
         {
             Header = "开机自启动",
@@ -204,6 +248,20 @@ public partial class MainWindow : Window
 
         menu.Items.Add(autoStartItem);
         menu.IsOpen = true;
+    }
+
+    private static void OpenWorkspaceInExplorer(string workspaceName)
+    {
+        var dir = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "XTodo", workspaceName);
+        try
+        {
+            if (!System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+            System.Diagnostics.Process.Start("explorer.exe", dir);
+        }
+        catch { /* 忽略 */ }
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -249,6 +307,7 @@ public partial class MainWindow : Window
             if (!string.IsNullOrWhiteSpace(newName))
             {
                 cat.Name = newName;
+                _viewModel.OnCategoryRenamed(cat, oldText);
                 _viewModel.PendingEditCategoryId = null;
             }
             btn.Content = oldTextBlock;

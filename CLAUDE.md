@@ -8,7 +8,7 @@
 
 为 Windows 用户开发一个悬浮 Todo List 桌面应用。详情见需求文档。
 
-**技术栈**：.NET 8 + WPF + MVVM
+**技术栈**：.NET 10 + WPF + MVVM
 **目标用户**：非技术背景
 **开发原则**：分阶段渐进式，每阶段产出可运行版本
 
@@ -75,8 +75,8 @@
 
 ## 环境信息
 
-- **项目根目录**：`d:\source\aiRepos`
-- **.NET 项目目录**：`d:\source\aiRepos\XTodo\`（Phase 2 创建）
+- **项目根目录**：`d:\source\aiRepos\XTodo\`
+- **.NET 项目目录**：`d:\source\aiRepos\XTodo\XTodo\`
 - **操作系统**：Windows 11 Pro
 - **终端**：PowerShell 5.1
 
@@ -93,5 +93,5 @@
 - **Phase 7** ✅ 已完成（2026-06-26）
 - **Phase 8** ✅ 已完成（2026-06-26）
 - **Phase 9** ✅ 已完成（2026-06-26）
-- 🎉 **全部 Phase 完成！** 发布包位于 `publish/` 目录
+- **Phase 10** ✅ 已完成（2026-06-27）— 工作区存档系统
 - **最后的 devlog**：`devlog/2026-06-26.md`
